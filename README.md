@@ -1,7 +1,7 @@
 # File Permissions Utils
 
-## Get-BreakPoints
+## Get-InheritanceBreaks
 
-```Get-BreakPoints -Path "C:\Your\Path\Here"```
+```Get-InheritanceBreaks -Path "C:\Your\Path\Here"```
 
 Returns directories with inhertance disabled.
