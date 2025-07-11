@@ -44,11 +44,14 @@ function ScannerGui {
     $addPathButton.AutoSize = $true
     $addPathButton.Add_Click({
             $folderDialog = New-Object System.Windows.Forms.FolderBrowserDialog
+            $folderDialog.MultiSelect = $true
             $folderDialog.Description = "Select a directory to add"
             if ($folderDialog.ShowDialog() -eq [System.Windows.Forms.DialogResult]::OK) {
-                $selectedPath = $folderDialog.SelectedPath
-                if (-not $pathsBox.Items.Contains($selectedPath)) {
-                    $pathsBox.Items.Add($selectedPath)
+                $selectedPaths = $folderDialog.SelectedPaths
+                foreach ($selectedPath in $selectedPaths) {
+                    if (-not $pathsBox.Items.Contains($selectedPath)) {
+                        $pathsBox.Items.Add($selectedPath)
+                    }
                 }
             }
         })
@@ -69,7 +72,7 @@ function ScannerGui {
             }
         })
     $pathsAddRemovePanel.Controls.Add($removePathButton)
-    $pathEntryPanel.Controls.AddRange(@($pathsLabel, $pathsBox, $pathsAddRemovePanel))
+    $pathEntryPanel.Controls.AddRange(@($pathsLabel, $pathsBox))
 
     $form.Controls.Add($pathEntryPanel)
 
@@ -81,14 +84,18 @@ function ScannerGui {
     $bottomPanel.FlowDirection = 'RightToLeft'
     $form.Controls.Add($bottomPanel)
 
+
     # Scan Button
     $scanButton = New-Object System.Windows.Forms.Button
     $scanButton.Text = 'Scan'
+    $scanButton.AutoSize = $true
     $scanButton.Add_click({
         $result = Get-UserAccessChk $pathsBox.Items
         Save-GUI $result
     })
     $bottomPanel.Controls.Add($scanButton)
+    $bottomPanel.Controls.Add($removePathButton)
+    $bottomPanel.Controls.Add($addPathButton)
 
     [System.Windows.Forms.Application]::Run($form)
 }
