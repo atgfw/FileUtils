@@ -92,7 +92,7 @@ function ScannerGui {
     $scanButton.Add_click({
         $OUResult = Select-OU
         if ($OUResult.DialogResult -ne [System.Windows.Forms.DialogResult]) {
-            $result = Get-UserAccessChk $pathsBox.Items -SearchBase $OUResult[-1]
+            $result = Get-ADUserAccessChk -Directories $pathsBox.Items -Users (Get-ADUser -Filter * -SearchBase $OUResult[-1])
             Save-GUI $result
         }
     })
