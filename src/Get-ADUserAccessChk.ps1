@@ -1,11 +1,13 @@
 function Get-ADUserAccessChk {
+    [CmdletBinding()]
     param (
         [Parameter(Mandatory)]
         [string[]]$Directories,
 
-        [Parameter()]
-        [ADAccount]$UserSIDs
+        [Parameter(Mandatory)]
+        [Microsoft.ActiveDirectory.Management.ADUser[]]$Users
     )
+    Write-Debug "Using script tool at $toolsPath\accesschk64.exe"
 
     # Validate directories
     $ValidDirs = $Directories | Where-Object { Test-Path $_ }
@@ -13,18 +15,13 @@ function Get-ADUserAccessChk {
         throw "No valid directories provided."
     }
 
-    # Get friendly names for SIDs
-    Write-Host "Fetching enabled AD users..."
-    $UserSIDs | ForEach-Object {
-        $friendlyName = (New-Object System.Security.Principal.SecurityIdentifier($sid)).Translate([System.Security.Principal.NTAccount]).value
-        $UserNames[$_] = $friendlyName
-    }
+    Write-Debug "Valid directories = $ValidDirs"
 
     $Results = @()
-    $total = $UserNames.Count
+    $total = $Users.Count
     $i = 0
 
-    foreach ($user in $UserNames) {
+    foreach ($user in $Users) {
         $i++
         Write-Progress -Activity "Scanning Permissions" -Status "Scanning access for $($user.Name)" -PercentComplete (($i / $total) * 100)
 
@@ -34,11 +31,13 @@ function Get-ADUserAccessChk {
             try {
                 $output = $null
                 if (Test-Path $dir -PathType Leaf) {
-                    $output = accesschk64.exe $user.SamAccountName $dir -nobanner 2>&1
+                    $output = & "$toolsPath\accesschk64.exe" $user.SamAccountName $dir -nobanner -accepteula 2>&1
                 }
                 else {
-                    $output = accesschk64.exe $user.SamAccountName $dir -nobanner -d 2>&1
+                    $output = & "$toolsPath\accesschk64.exe" $user.SamAccountName $dir -nobanner -accepteula -d 2>&1
                 }
+                Write-Debug "accesschk for $dir"
+                Write-Debug $output
 
                 if ($output -match "No matching objects found.") {
                     $result[$dir] = "Error"
@@ -51,6 +50,7 @@ function Get-ADUserAccessChk {
             }
             catch {
                 $result[$dir] = "Error"
+                Write-Error $_
             }
         }
 
