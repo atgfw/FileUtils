@@ -7,6 +7,7 @@ function Get-ADUserAccessChk {
         [Parameter(Mandatory)]
         [Microsoft.ActiveDirectory.Management.ADUser[]]$Users
     )
+    Write-Debug "Using script tool at $toolsPath\accesschk64.exe"
 
     # Validate directories
     $ValidDirs = $Directories | Where-Object { Test-Path $_ }
