@@ -50,6 +50,7 @@ function Get-ADUserAccessChk {
             }
             catch {
                 $result[$dir] = "Error"
+                Write-Error $_
             }
         }
 
