@@ -28,9 +28,11 @@ function Get-ADUserAccessChk {
                 $output = $null
                 if (Test-Path $dir -PathType Leaf) {
                     $output = . "$toolsPath\accesschk64.exe $user.SamAccountName $dir -nobanner 2>&1"
+                    Write-Debug $output
                 }
                 else {
                     $output = . "$toolsPath\accesschk64.exe $user.SamAccountName $dir -nobanner -d 2>&1"
+                    Write-Debug $output
                 }
 
                 if ($output -match "No matching objects found.") {
