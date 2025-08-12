@@ -3,8 +3,8 @@ function Get-ADUserAccessChk {
         [Parameter(Mandatory)]
         [string[]]$Directories,
 
-        [Parameter()]
-        [Microsoft.ActiveDirectory.Management.ADUser]$UserSIDs
+        [Parameter(Mandatory)]
+        [Microsoft.ActiveDirectory.Management.ADUser[]]$Users
     )
 
     # Validate directories
@@ -13,18 +13,11 @@ function Get-ADUserAccessChk {
         throw "No valid directories provided."
     }
 
-    # Get friendly names for SIDs
-    Write-Host "Fetching enabled AD users..."
-    $UserSIDs | ForEach-Object {
-        $friendlyName = (New-Object System.Security.Principal.SecurityIdentifier($sid)).Translate([System.Security.Principal.NTAccount]).value
-        $UserNames[$_] = $friendlyName
-    }
-
     $Results = @()
     $total = $UserNames.Count
     $i = 0
 
-    foreach ($user in $UserNames) {
+    foreach ($user in $Users) {
         $i++
         Write-Progress -Activity "Scanning Permissions" -Status "Scanning access for $($user.Name)" -PercentComplete (($i / $total) * 100)
 
