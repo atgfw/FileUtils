@@ -14,7 +14,7 @@ function Get-ADUserAccessChk {
     }
 
     $Results = @()
-    $total = $UserNames.Count
+    $total = $Users.Count
     $i = 0
 
     foreach ($user in $Users) {
