@@ -1,4 +1,5 @@
 function Get-ADUserAccessChk {
+    [CmdletBinding()]
     param (
         [Parameter(Mandatory)]
         [string[]]$Directories,
