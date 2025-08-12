@@ -15,6 +15,8 @@ function Get-ADUserAccessChk {
         throw "No valid directories provided."
     }
 
+    Write-Debug "Valid directories = $ValidDirs"
+
     $Results = @()
     $total = $Users.Count
     $i = 0
@@ -30,12 +32,12 @@ function Get-ADUserAccessChk {
                 $output = $null
                 if (Test-Path $dir -PathType Leaf) {
                     $output = . "$toolsPath\accesschk64.exe $user.SamAccountName $dir -nobanner 2>&1"
-                    Write-Debug $output
                 }
                 else {
                     $output = . "$toolsPath\accesschk64.exe $user.SamAccountName $dir -nobanner -d 2>&1"
-                    Write-Debug $output
                 }
+                Write-Debug "accesschk for $dir"
+                Write-Debug $output
 
                 if ($output -match "No matching objects found.") {
                     $result[$dir] = "Error"
