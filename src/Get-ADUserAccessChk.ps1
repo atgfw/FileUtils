@@ -31,10 +31,10 @@ function Get-ADUserAccessChk {
             try {
                 $output = $null
                 if (Test-Path $dir -PathType Leaf) {
-                    $output = & "$toolsPath\accesschk64.exe" $user.SamAccountName $dir -nobanner 2>&1
+                    $output = & "$toolsPath\accesschk64.exe" $user.SamAccountName $dir -nobanner -accepteula 2>&1
                 }
                 else {
-                    $output = & "$toolsPath\accesschk64.exe" $user.SamAccountName $dir -nobanner -d 2>&1
+                    $output = & "$toolsPath\accesschk64.exe" $user.SamAccountName $dir -nobanner -accepteula -d 2>&1
                 }
                 Write-Debug "accesschk for $dir"
                 Write-Debug $output
