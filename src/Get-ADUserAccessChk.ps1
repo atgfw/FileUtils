@@ -4,7 +4,7 @@ function Get-ADUserAccessChk {
         [string[]]$Directories,
 
         [Parameter()]
-        [ADAccount]$UserSIDs
+        [Microsoft.ActiveDirectory.Management.ADUser]$UserSIDs
     )
 
     # Validate directories
