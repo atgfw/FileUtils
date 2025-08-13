@@ -106,6 +106,7 @@ function ScannerGui {
 function Select-OU {
     Import-Module ActiveDirectory
     $form = New-Object System.Windows.Forms.Form
+    $form.text = "Select an OU to pull Users from"
 
     $table = New-Object System.Windows.Forms.TableLayoutPanel
     $table.Dock = 'Fill'
